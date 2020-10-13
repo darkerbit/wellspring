@@ -15,14 +15,14 @@
   "license": "MIT",
   "icon": "assets/wellspring/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "client": [
-      "io.github.darkerbit.wellspring.client.WellspringClientMod"
-    ]
   },
   "mixins": [
-    "wellspring.mixins.json"
+    {
+      "config": "wellspring.mixins.json",
+      "environment": "client"
+    }
   ],
 
   "depends": {
