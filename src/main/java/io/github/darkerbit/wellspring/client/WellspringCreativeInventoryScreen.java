@@ -9,6 +9,13 @@ import net.minecraft.util.Identifier;
 
 public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
     private static final Identifier TEXTURE = new Identifier("textures/gui/container/creative_inventory/tabs.png");
+    private static final Identifier WELLSPRING_TEXTURE =
+            new Identifier("wellspring", "textures/gui/creative_tab.png");
+
+    private static final int SIDETAB_WIDTH = 46;
+    private static final int SIDETAB_HEIGHT = 16;
+
+    private static final int SIDETAB_OFFSET = -41;
 
     public WellspringCreativeInventoryScreen(PlayerEntity player) {
         super(player);
@@ -21,7 +28,7 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         client.getTextureManager().bindTexture(new Identifier("textures/gui/container/creative_inventory/tab_" + itemGroup.getTexture()));
         drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
-        
+
         int normalGroupIndex = 0;
         int specialGroupIndex = 0;
 
@@ -30,8 +37,22 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
                 // TODO: Special ItemGroup Rendering
                 specialGroupIndex++;
             } else {
+                renderSideTab(matrices, group, normalGroupIndex, group == itemGroup);
                 normalGroupIndex++;
             }
         }
+    }
+
+    private void renderSideTab(MatrixStack matrices, ItemGroup group, int groupIndex, boolean selected) {
+        int x = this.x + SIDETAB_OFFSET;
+        int y = this.y + groupIndex * (SIDETAB_HEIGHT - 1) + 4;
+
+        client.getTextureManager().bindTexture(WELLSPRING_TEXTURE);
+        drawTexture(
+                matrices,
+                x, y,
+                0, selected ? 16 : 0,
+                SIDETAB_WIDTH, SIDETAB_HEIGHT,
+                SIDETAB_WIDTH, SIDETAB_HEIGHT * 2);
     }
 }
