@@ -60,6 +60,16 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
     }
 
     private void renderSpecial(MatrixStack matrices, ItemGroup group, int groupIndex, boolean selected) {
-        // TODO: Special Rendering
+        matrices.push();
+
+        matrices.translate(0, 0, 0);
+
+        if (!selected)
+            matrices.translate(0, group.isTopRow() ? -3 : 3, 0);
+
+        client.getTextureManager().bindTexture(TEXTURE);
+        renderTabIcon(matrices, group);
+        client.getTextureManager().bindTexture(WELLSPRING_TEXTURE);
+        matrices.pop();
     }
 }
