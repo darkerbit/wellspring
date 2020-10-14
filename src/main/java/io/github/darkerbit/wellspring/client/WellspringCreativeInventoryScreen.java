@@ -12,10 +12,13 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
     private static final Identifier WELLSPRING_TEXTURE =
             new Identifier("wellspring", "textures/gui/creative_tab.png");
 
-    private static final int SIDETAB_WIDTH = 46;
-    private static final int SIDETAB_HEIGHT = 16;
+    private static final int TEXTURE_WIDTH = 32;
+    private static final int TEXTURE_HEIGHT = 64;
 
-    private static final int SIDETAB_OFFSET = -41;
+    private static final int SIDETAB_WIDTH = 32;
+    private static final int SIDETAB_HEIGHT = 20;
+
+    private static final int SIDETAB_OFFSET = -27;
 
     public WellspringCreativeInventoryScreen(PlayerEntity player) {
         super(player);
@@ -34,7 +37,7 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
 
         for (ItemGroup group : ItemGroup.GROUPS) {
             if (group.isSpecial()) {
-                // TODO: Special ItemGroup Rendering
+                renderSpecial(matrices, group, specialGroupIndex, group == itemGroup);
                 specialGroupIndex++;
             } else {
                 renderSideTab(matrices, group, normalGroupIndex, group == itemGroup);
@@ -51,8 +54,12 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
         drawTexture(
                 matrices,
                 x, y,
-                0, selected ? 16 : 0,
+                0, selected ? SIDETAB_HEIGHT : 0,
                 SIDETAB_WIDTH, SIDETAB_HEIGHT,
-                SIDETAB_WIDTH, SIDETAB_HEIGHT * 2);
+                TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    }
+
+    private void renderSpecial(MatrixStack matrices, ItemGroup group, int groupIndex, boolean selected) {
+        // TODO: Special Rendering
     }
 }
