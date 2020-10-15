@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "MixinInventoryScreen"
+    "MixinInventoryScreen",
+    "MixinCreativeInventoryScreen"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -44,6 +44,21 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
                 normalGroupIndex++;
             }
         }
+
+        client.getTextureManager().bindTexture(TEXTURE);
+
+        int scrollX = x + 175;
+        int scrollY = y + 18;
+        int height = scrollY + 112;
+
+        float scrollPosition = ((CreativeInventoryHooks) this).getScrollPosition();
+
+        if (itemGroup.hasScrollbar()) {
+            drawTexture(
+                    matrices,
+                    scrollX, scrollY + (int)((height - scrollY - 17) * scrollPosition),
+                    232, 0, 12, 15);
+        }
     }
 
     private void renderSideTab(MatrixStack matrices, ItemGroup group, int groupIndex, boolean selected) {
