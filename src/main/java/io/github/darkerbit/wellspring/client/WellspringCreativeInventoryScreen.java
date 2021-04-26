@@ -26,21 +26,44 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
 
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        ItemGroup itemGroup = ItemGroup.GROUPS[getSelectedTab()];
-
-        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        client.getTextureManager().bindTexture(new Identifier("textures/gui/container/creative_inventory/tab_" + itemGroup.getTexture()));
-        drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+        ItemGroup selectedItemGroup = ItemGroup.GROUPS[getSelectedTab()];
 
         int normalGroupIndex = 0;
         int specialGroupIndex = 0;
 
+        // This is essentially duplicated because unselected tabs should draw under the ui, but selected should draw over.
         for (ItemGroup group : ItemGroup.GROUPS) {
             if (group.isSpecial()) {
-                renderSpecial(matrices, group, specialGroupIndex, group == itemGroup);
+                if (group != selectedItemGroup)
+                    renderSpecial(matrices, group, specialGroupIndex, false);
+
                 specialGroupIndex++;
             } else {
-                renderSideTab(matrices, group, normalGroupIndex, group == itemGroup);
+                if (group != selectedItemGroup)
+                    renderSideTab(matrices, group, normalGroupIndex, false);
+
+                normalGroupIndex++;
+            }
+        }
+
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        client.getTextureManager().bindTexture(new Identifier("textures/gui/container/creative_inventory/tab_" + selectedItemGroup.getTexture()));
+        drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+
+        normalGroupIndex = 0;
+        specialGroupIndex = 0;
+
+        // TODO: reduce code duplication
+        for (ItemGroup group : ItemGroup.GROUPS) {
+            if (group.isSpecial()) {
+                if (group == selectedItemGroup)
+                    renderSpecial(matrices, group, specialGroupIndex, true);
+
+                specialGroupIndex++;
+            } else {
+                if (group == selectedItemGroup)
+                    renderSideTab(matrices, group, normalGroupIndex, true);
+
                 normalGroupIndex++;
             }
         }
@@ -53,7 +76,7 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
 
         float scrollPosition = ((CreativeInventoryHooks) this).getScrollPosition();
 
-        if (itemGroup.hasScrollbar()) {
+        if (selectedItemGroup.hasScrollbar()) {
             drawTexture(
                     matrices,
                     scrollX, scrollY + (int)((height - scrollY - 17) * scrollPosition),
@@ -62,8 +85,8 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
     }
 
     private void renderSideTab(MatrixStack matrices, ItemGroup group, int groupIndex, boolean selected) {
-        int x = this.x + SIDETAB_OFFSET;
-        int y = this.y + groupIndex * (SIDETAB_HEIGHT - 1) + 4;
+        int x = this.x + SIDETAB_OFFSET + 1;
+        int y = this.y + groupIndex * (SIDETAB_HEIGHT - 1) + 1;
 
         client.getTextureManager().bindTexture(WELLSPRING_TEXTURE);
         drawTexture(
@@ -76,11 +99,6 @@ public class WellspringCreativeInventoryScreen extends CreativeInventoryScreen {
 
     private void renderSpecial(MatrixStack matrices, ItemGroup group, int groupIndex, boolean selected) {
         matrices.push();
-
-        matrices.translate(0, 0, 0);
-
-        if (!selected)
-            matrices.translate(0, group.isTopRow() ? -3 : 3, 0);
 
         client.getTextureManager().bindTexture(TEXTURE);
         renderTabIcon(matrices, group);
